@@ -1,3 +1,43 @@
+# knapSack <- function(x,W){
+#   n <- nrow(x)
+#   wt <- x[,"w"]
+#   val <- x[,"v"]
+#   i <- numeric(0)
+#   w <- numeric(0)
+#
+#  K <- data.frame(w = numeric(0), v = double(0.00))
+#   for (i in 1:n)
+#   {
+#     for (w in 1:W)
+#     {
+#       if (i == 0 || w == 0)
+#         K[i,w] <- 0
+#       ival <- i-1
+#       else if (wt[ival] <= w)
+#         K[i,w] <- max(val[ival] + K[ival,w-wt[ival]], K[ival,w])
+#       else
+#         K[i,w] <- K[ival,w]
+#     }
+#   }
+#
+#   return (K[n,W])
+# }
+# #Testing the function
+#
+#
+# set.seed(42)
+# n <- 2000
+# knapsack_objects <-
+#   data.frame(
+#     w=sample(1:4000, size = n, replace = TRUE),
+#     v=runif(n = n, 0, 10000)
+#   )
+#
+#
+# knapSack(x = knapsack_objects[1:8,], W = 3500)
+
+
+
 brute_force_knapsack = function(x, W){
   print(x)
   all_knapsack <- data.frame(w = numeric(0), v = double(0.00))
@@ -28,8 +68,8 @@ brute_force_knapsack = function(x, W){
     }
   }
 
-names(all_knapsack) <- c("w","v")
-return(all_knapsack)
+  names(all_knapsack) <- c("w","v")
+  return(all_knapsack)
 }
 
 
@@ -59,21 +99,22 @@ knapsack = function (x,W){
   colnames(matrixWithWeight)[ncol(matrixWithWeight)] <- "weight"
   matrixWithWeight <- cbind(matrixWithWeight,c("value"=0))
   colnames(matrixWithWeight)[ncol(matrixWithWeight)] <- "value"
-   for (i in 1:nrow(matrixWithWeight)){
-     xm <- which(matrixWithWeight[i,] ==1, arr.ind = T)
-     weightValue <- 0
-     valueSum <- 0
-     for (j in xm){
-       weightValue <- weightValue+as.numeric(colnames(matrixWithWeight)[j])
-       #valueSum <- valueSum+round(x[which(colnames(matrixWithWeight)[j] %in% x[,"w"]),"v"])
-       valueSum <- valueSum+round(x[which(x$w == as.numeric(colnames(matrixWithWeight)[j])),"v"])
-
-       matrixWithWeight[i,"weight"] <- weightValue
-       matrixWithWeight[i,"value"] <- valueSum
-     }
-     #print(weightValue)
-     print(matrixWithWeight[i,])
-   }
+  for (i in 1:nrow(matrixWithWeight)){
+    xm <- which(matrixWithWeight[i,] ==1, arr.ind = T)
+    weightValue <- 0
+    valueSum <- 0
+    for (j in xm){
+      weightValue <- weightValue+as.numeric(colnames(matrixWithWeight)[j])
+      valueSum <- valueSum+round(x[which(as.numeric(colnames(matrixWithWeight)[j]) %in% x[,"w"]),"v"])
+      if (weightValue <= W){
+        matrixWithWeight[i,"weight"] <- weightValue
+      }
+      matrixWithWeight[i,"value"] <- valueSum
+    }
+    #print(weightValue)
+    print(matrixWithWeight[i,])
+  }
+  print(matrixWithWeight)
   # for (i in 1:nrow(matrixWithWeight)){
   #   if ()
   # }
@@ -90,6 +131,6 @@ knapsack_objects <-
 
 #brute_force_knapsack3(x = knapsack_objects[1:8,], W = 3500)
 knapsack(x = knapsack_objects[1:8,], W = 3500)
-
+print(knapsack_objects[1:8,])
 
 
