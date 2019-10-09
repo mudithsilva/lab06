@@ -1,54 +1,10 @@
-brute_force_knapsack = function(x, W){
-  print(x)
-  all_knapsack <- data.frame(w = numeric(0), v = double(0.00))
-  maximum_knapsack = "vector"
-  weight <- W
-  if (!(is.data.frame(x)))
-    stop("The input is not a dataframe")
-
-  for (y in colnames(x)){
-    if (!(y %in% c("v","w")))
-      stop("Variable name in the dataframe are not named correctly")
-  }
-
-  for (i in 1:nrow(x)){
-    if (x[i,"w"]<0 || x[i,"v"]<0)
-      stop("all value must be positive")
-  }
-
-  for (item in 1:nrow(x)){
-    if (x[item,"w"] < weight)
-    {
-      all_knapsack <- rbind(all_knapsack, c(x[item,"w"], x[item,"v"]))
-      for (item2 in 1:nrow(x)){
-        if ((x[item,"w"] + x[item2,"w"]) < weight){
-          all_knapsack <- rbind(all_knapsack, c(w = x[item,"w"]+x[item2,"w"], v = x[item,"v"]+x[item2,"v"]))
-        }
-      }
-    }
-  }
-
-names(all_knapsack) <- c("w","v")
-return(all_knapsack)
-}
-
-
-brute_force_knapsack2 = function(x,W){
-  mat <- matrix(ncol = nrow(x),nrow = 2^nrow(x))
-  mat_row_names <- as.character(c(x[,"w"]))
-  colnames(mat) <- mat_row_names
-  options(max.print=1000000)
-  return (combn(x[,"w"],7))
-  return (mat)
-}
-
 calculate_binary_matrix = function(x){
   library(data.table)
   options(max.print=1000000)
   return(do.call(CJ, replicate(x, 0:1, FALSE)))
 }
 
-knapsack = function (x,W){
+brute_force_knapsack = function (x,W){
   library(data.table)
   options(max.print=1000000)
   binaryMatrix <- calculate_binary_matrix(nrow(x))
@@ -65,18 +21,21 @@ knapsack = function (x,W){
      valueSum <- 0
      for (j in xm){
        weightValue <- weightValue+as.numeric(colnames(matrixWithWeight)[j])
-       #valueSum <- valueSum+round(x[which(colnames(matrixWithWeight)[j] %in% x[,"w"]),"v"])
        valueSum <- valueSum+round(x[which(x$w == as.numeric(colnames(matrixWithWeight)[j])),"v"])
-
+     }
+     if (weightValue <= W){
        matrixWithWeight[i,"weight"] <- weightValue
        matrixWithWeight[i,"value"] <- valueSum
      }
-     #print(weightValue)
-     print(matrixWithWeight[i,])
    }
-  # for (i in 1:nrow(matrixWithWeight)){
-  #   if ()
-  # }
+  maxValueRowNumver <- which(matrixWithWeight == max(matrixWithWeight[,"value"]), arr.ind=TRUE)
+  colNamesValue <- which(matrixWithWeight[maxValueRowNumver[1],] ==1, arr.ind = F)
+  cat(paste("$value "),sep = "\n")
+  cat(paste("   ",max(matrixWithWeight[,"value"])),sep = "\n")
+  cat(paste("$elements "),sep = "\n")
+  elements <- as.vector(write.table(format(colNamesValue),row.names=F, col.names=F, quote=F))
+
+  #print(max(matrixWithWeight[,"value"]))
 }
 #Testing the function
 set.seed(42)
@@ -89,7 +48,7 @@ knapsack_objects <-
 
 
 #brute_force_knapsack3(x = knapsack_objects[1:8,], W = 3500)
-knapsack(x = knapsack_objects[1:8,], W = 3500)
+brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
 
 
 
