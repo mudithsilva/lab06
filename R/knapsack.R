@@ -33,11 +33,13 @@ brute_force_knapsack = function (x,W){
   cat(paste("$value "),sep = "\n")
   cat(paste("   ",max(matrixWithWeight[,"value"])),sep = "\n")
   cat(paste("$elements "),sep = "\n")
-  elements <- as.vector(write.table(format(colNamesValue),row.names=F, col.names=F, quote=F))
-
-  #print(max(matrixWithWeight[,"value"]))
+  names(colNamesValue) <- NULL
+  print(colNamesValue)
 }
+
+
 #Testing the function
+RNGkind(sample.kind = "Rounding")
 set.seed(42)
 n <- 2000
 knapsack_objects <-
