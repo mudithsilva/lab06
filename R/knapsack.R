@@ -1,22 +1,29 @@
 brute_force_knapsack = function(x, W){
+  all_knapsack <- data.frame(w = numeric(0), v = numeric(0))
   maximum_knapsack = "vector"
-  if (!(as.data.frame(x)))
+  weight <- W
+  if (!(is.data.frame(x)))
     stop("The input is not a dataframe")
-  if (!(colnames(x) %in% c("v","w")))
-    stop("Variable name in the dataframe are not named correctly")
-  for (i in length(x)){
-    if (x["w"]<0 || x["v"]<0)
+
+  for (y in colnames(x)){
+    if (!(y %in% c("v","w")))
+      stop("Variable name in the dataframe are not named correctly")
+  }
+
+  for (i in 1:nrow(x)){
+    if (x[i,"w"]<0 || x[i,"v"]<0)
       stop("all value must be positive")
   }
 
-for (h in length(x)){
-  print(length(x))
- print(x[h,"w"])
-  print(x[h,"v"])
-}
+  for (item in 1:nrow(x)){
+    if (x[item,"w"] < weight)
+      print(x[item,"w"])
+      biggerWeight <- c(x[item,"w"], x[item,"v"])
+      all_knapsack <- rbind(all_knapsack,biggerWeight)
+  }
 
-
-  return(maximum_knapsack)
+names(all_knapsack) <- c("w","v")
+return(all_knapsack)
 }
 
 #Testing the function
@@ -29,7 +36,7 @@ knapsack_objects <-
   )
 
 
-brute_force_knapsack(knapsack_objects)
+brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
 
 
 
