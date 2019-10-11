@@ -1,4 +1,6 @@
-brute_force_knapsack <- function(x,W) {
+library(parallel)
+
+brute_force_knapsack <- function(x,W,parallel = FALSE) {
 #The running time for this function is 0.6906214 secs
   if (!is.data.frame(x)) {
     stop("The input is not a dataframe")
@@ -8,32 +10,61 @@ brute_force_knapsack <- function(x,W) {
     stop("Please Enter valid Weight")
   }
 
-  for (y in colnames(x)){
-    if (!(y %in% c("v","w")))
-      stop("Variable name in the dataframe are not named correctly")
+  if (!(all(colnames(x) %in% c("v","w")))) {
+    stop("Variable name in the dataframe are not named correctly")
   }
+
+  # for (y in colnames(x)){
+  #   if (!(y %in% c("v","w")))
+  #     stop("Variable name in the dataframe are not named correctly")
+  # }
+
+  # --------- Functions for get Weights, Values and Names from Data Frame --------- #
+
+  getAllWeight <- function(count) {
+    return(combn(x[,"w"], count, sum))
+  }
+
+  getAllValues <- function(count) {
+    return(combn(x[,"v"], count, sum))
+  }
+
+  getAllElements <- function(count) {
+    return(combn(rownames(x), count, function(x) getElementName(x)))
+  }
+
+  getElementName <- function(names) {
+    return(paste(names, collapse = ","))
+  }
+  # --------- Functions for get Weights, Values and Names from Data Frame --------- #
 
   best_combination <- list()
   best_combination[["value"]] = 0
   best_combination[["elements"]] = 0
 
-  getElementName <- function(names) {
-    return(paste(names, collapse = ","))
-  }
-
   all_weight <- c()
   all_values <- c()
   all_elements <- c()
 
-  for(item in 1:nrow(x)) {
+  if (parallel) {
+    numberOfCores <- parallel::detectCores()
+    clusters <- parallel::makeCluster(numberOfCores)
 
-    set_weight <- combn(x[,"w"], item, sum)
-    set_values <- combn(x[,"v"], item, sum)
-    set_elements <- combn(rownames(x), item, function(x) getElementName(x))
+    all_weight <- unlist(parLapplyLB(clusters, 1:nrow(x), function(y) getAllWeight(y)))
+    all_values <- unlist(parLapplyLB(clusters, 1:nrow(x), function(y) getAllValues(y)))
+    all_elements <- unlist(parLapplyLB(clusters, 1:nrow(x), function(y) getAllElements(y)))
 
-    all_weight <- c(all_weight, set_weight)
-    all_values <- c(all_values, set_values)
-    all_elements <- c(all_elements, set_elements)
+    parallel::stopCluster(clusters)
+  } else {
+    for(item in 1:nrow(x)) {
+      set_weight <- getAllWeight(item)
+      set_values <- getAllValues(item)
+      set_elements <- getAllElements(item)
+
+      all_weight <- c(all_weight, set_weight)
+      all_values <- c(all_values, set_values)
+      all_elements <- c(all_elements, set_elements)
+    }
   }
 
   valid_range <- which(all_weight <= W)
@@ -50,17 +81,22 @@ brute_force_knapsack <- function(x,W) {
 
 
 # RNGkind(sample.kind = "Rounding")
-set.seed(42)
-n <- 2000
-knapsack_objects <- data.frame(
-  w=sample(1:4000, size = n, replace = TRUE),
-  v=runif(n = n, 0, 10000)
-)
-
-#brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
+# set.seed(42)
+# n <- 2000
+# knapsack_objects <- data.frame(
+#   w=sample(1:4000, size = n, replace = TRUE),
+#   v=runif(n = n, 0, 10000)
+# )
+#
+# brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500, parallel = TRUE)
 #brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
 
-start_time <- Sys.time()
-brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000)
-end_time <- Sys.time()
-print(end_time - start_time)
+# start_time <- Sys.time()
+# brute_force_knapsack2(x = knapsack_objects[1:16,], W = 2000)
+# end_time <- Sys.time()
+# print(end_time - start_time)
+#
+# start_time <- Sys.time()
+# brute_force_knapsack2(x = knapsack_objects[1:16,], W = 2000, parallel = TRUE)
+# end_time <- Sys.time()
+# print(end_time - start_time)
