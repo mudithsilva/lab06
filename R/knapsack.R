@@ -1,4 +1,5 @@
-#'@export brute_force_knapsack
+
+
 calculate_binary_matrix = function(x){
   library(data.table)
   options(max.print=1000000)
@@ -15,7 +16,6 @@ brute_force_knapsack = function (x,W){
       stop("Variable name in the dataframe are not named correctly")
   }
 
-    library(data.table)
   options(max.print=1000000)
   binaryMatrix <- calculate_binary_matrix(nrow(x))
   weightAndValueMatrix <- matrix(nrow = nrow(x),ncol = 2+ncol(x))

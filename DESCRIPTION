@@ -17,5 +17,6 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    parallel
+    parallel,
+    data.table
 VignetteBuilder: knitr
