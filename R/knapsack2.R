@@ -1,6 +1,6 @@
 library(parallel)
 
-brute_force_knapsack <- function(x,W,parallel = FALSE) {
+brute_force_knapsack_two <- function(x,W,parallel = FALSE) {
 #The running time for this function is 0.6906214 secs
   if (!is.data.frame(x)) {
     stop("The input is not a dataframe")
@@ -81,22 +81,22 @@ brute_force_knapsack <- function(x,W,parallel = FALSE) {
 
 
 # RNGkind(sample.kind = "Rounding")
-# set.seed(42)
-# n <- 2000
-# knapsack_objects <- data.frame(
-#   w=sample(1:4000, size = n, replace = TRUE),
-#   v=runif(n = n, 0, 10000)
-# )
+set.seed(42)
+n <- 2000
+knapsack_objects <- data.frame(
+  w=sample(1:4000, size = n, replace = TRUE),
+  v=runif(n = n, 0, 10000)
+)
 #
 # brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500, parallel = TRUE)
 #brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
 
-# start_time <- Sys.time()
-# brute_force_knapsack2(x = knapsack_objects[1:16,], W = 2000)
-# end_time <- Sys.time()
-# print(end_time - start_time)
-#
-# start_time <- Sys.time()
-# brute_force_knapsack2(x = knapsack_objects[1:16,], W = 2000, parallel = TRUE)
-# end_time <- Sys.time()
-# print(end_time - start_time)
+start_time <- Sys.time()
+brute_force_knapsack_two(x = knapsack_objects[1:16,], W = 2000)
+end_time <- Sys.time()
+print(end_time - start_time)
+
+start_time <- Sys.time()
+brute_force_knapsack_two(x = knapsack_objects[1:16,], W = 2000, parallel = TRUE)
+end_time <- Sys.time()
+print(end_time - start_time)
