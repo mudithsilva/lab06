@@ -1,4 +1,4 @@
-context("brute_force_knapsack")
+context("brute_force_dynamicknapsack_dynamic_pro")
 
 suppressWarnings(RNGversion("3.5.9"))
 set.seed(42)
@@ -16,6 +16,8 @@ test_that("Correct object is returned", {
 
 test_that("functions rejects errounous input.", {
   expect_error(dynamic_knapsack("hej", 3500))
+  expect_error(dynamic_knapsack(x = knapsack_objects[1:8,] , "3500"))
+  expect_error(dynamic_knapsack("hej", "3500"))
   expect_error(dynamic_knapsack(x = knapsack_objects[1:8,], W = -3500))
 })
 
