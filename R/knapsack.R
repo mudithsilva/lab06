@@ -1,3 +1,4 @@
+#'@export brute_force_knapsack
 calculate_binary_matrix = function(x){
   library(data.table)
   options(max.print=1000000)

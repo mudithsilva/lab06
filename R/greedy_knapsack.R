@@ -1,3 +1,4 @@
+#' @export greedy_knapsack
 greedy_knapsack = function(x, W){
   if (W < 1){
     stop("The weight value is not valid")
