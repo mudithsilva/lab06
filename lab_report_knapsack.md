@@ -1,6 +1,6 @@
 
 ---
-title: "Knapsack Problem"
+title: "Knapsack"
 author: "Chathuranga Silva, Mohammed Bakheet, and Nikodimos Gezahegn"
 date: "11th October 2019"
 output: rmarkdown::html_vignette
@@ -10,14 +10,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-```{r setup}
+
+
+```r
 library(lab6)
 ```
 
@@ -64,7 +60,8 @@ List
 **brute_force_knapsack(x,W)**
   :The brute_force_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time
-```{r brute}
+
+```r
 set.seed(42)
 n <- 2000
 knapsack_objects <-
@@ -75,29 +72,45 @@ knapsack_objects <-
 
 start_time <- Sys.time()
 brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> $value
+#> [1] 15428
+#> 
+#> $elements
+#> [1] 3 8
 end_time <- Sys.time()
 print(end_time - start_time)
+#> Time difference of 0.03319573 secs
 ```
 
 **dynamic_knapsack(x,W)**
     :The dynamic_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time.
-```{r dynamic}
+
+```r
 start_time <- Sys.time()
 dynamic_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> Error in dynamic_knapsack(x = knapsack_objects[1:8, ], W = 2000): could not find function "dynamic_knapsack"
 end_time <- Sys.time()
 print(end_time - start_time)
+#> Time difference of 0.00297904 secs
 ```
 
 **greedy_knapsack(x,W)**
   :The greedy_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time.
-```{r greedy}
+
+```r
 start_time <- Sys.time()
 greedy_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> $value
+#> [1] 15428
+#> 
+#> $elements
+#> [1] 8 3
 end_time <- Sys.time()
 print(end_time - start_time)
-``` 
+#> Time difference of 0.01245141 secs
+```
 
 # References
 

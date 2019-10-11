@@ -46,19 +46,4 @@ greedy_knapsack = function(x, W){
 
 }
 
-options(max.print = 100000)
-set.seed(42)
-n <- 2000
-knapsack_objects <-
-  data.frame(
-    w=sample(1:4000, size = n, replace = TRUE),
-    v=runif(n = n, 0, 10000)
-  )
-
-start_time <- Sys.time()
-greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-end_time <- Sys.time()
-print(end_time - start_time)
-
-
 

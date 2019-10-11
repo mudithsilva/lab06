@@ -1,4 +1,4 @@
-
+#'@exportMethod dynamic_knapsack
 dynamic_knapsack <- function(x,W) {
 
   if (!is.data.frame(x)) {
@@ -61,10 +61,3 @@ dynamic_knapsack <- function(x,W) {
   return(best_combination)
 }
 
-set.seed(42)
-n <- 2000
-knapsack_objects <- data.frame(
-  w=sample(1:4000, size = n, replace = TRUE),
-  v=runif(n = n, 0, 10000)
-)
-dynamic_knapsack(x = knapsack_objects[1:8,], W = 3500)

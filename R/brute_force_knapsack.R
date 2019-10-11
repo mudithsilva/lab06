@@ -1,3 +1,4 @@
+#' @export
 library(parallel)
 
 brute_force_knapsack <- function(x,W,parallel = FALSE) {
@@ -13,13 +14,6 @@ brute_force_knapsack <- function(x,W,parallel = FALSE) {
   if (!(all(colnames(x) %in% c("v","w")))) {
     stop("Variable name in the dataframe are not named correctly")
   }
-
-  # for (y in colnames(x)){
-  #   if (!(y %in% c("v","w")))
-  #     stop("Variable name in the dataframe are not named correctly")
-  # }
-
-  # --------- Functions for get Weights, Values and Names from Data Frame --------- #
 
   getAllWeight <- function(count) {
     return(combn(x[,"w"], count, sum))
@@ -78,25 +72,3 @@ brute_force_knapsack <- function(x,W,parallel = FALSE) {
   best_combination[["elements"]] = as.numeric(unlist(strsplit(valid_elements[max_value_element], ",")))
   return(best_combination)
 }
-
-
-# RNGkind(sample.kind = "Rounding")
-# set.seed(42)
-# n <- 2000
-# knapsack_objects <- data.frame(
-#   w=sample(1:4000, size = n, replace = TRUE),
-#   v=runif(n = n, 0, 10000)
-# )
-# #
-# # brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500, parallel = TRUE)
-# #brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
-#
-# start_time <- Sys.time()
-# brute_force_knapsack_two(x = knapsack_objects[1:16,], W = 2000)
-# end_time <- Sys.time()
-# print(end_time - start_time)
-#
-# start_time <- Sys.time()
-# brute_force_knapsack_two(x = knapsack_objects[1:16,], W = 2000, parallel = TRUE)
-# end_time <- Sys.time()
-# print(end_time - start_time)
