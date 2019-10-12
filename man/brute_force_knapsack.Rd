@@ -4,12 +4,14 @@
 \alias{brute_force_knapsack}
 \title{Knapsack Algorithm - Brute Force}
 \usage{
-brute_force_knapsack(x, W)
+brute_force_knapsack(x, W, parallel = FALSE)
 }
 \arguments{
 \item{x}{data.frame with colnames 'v' & 'w'}
 
 \item{W}{Knapsack Maximum Weight}
+
+\item{parallel}{Bool value to pass to active parallel}
 }
 \value{
 Return best Knapsack combination with maximum value

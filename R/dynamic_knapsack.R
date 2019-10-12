@@ -31,11 +31,6 @@ dynamic_knapsack <- function(x,W) {
     stop("Variable name in the dataframe are not named correctly")
   }
 
-  # for (y in colnames(x)){
-  #   if (!(y %in% c("v","w")))
-  #     stop("Variable name in the dataframe are not named correctly")
-  # }
-
   best_combination <- list()
   best_combination[["value"]] = 0
   best_combination[["elements"]] = 0
@@ -54,7 +49,7 @@ dynamic_knapsack <- function(x,W) {
         weight_mat[row,column - 1] = weight_mat[row - 1, column - 1]
       } else {
         weight_mat[row,column - 1] = max(weight_mat[(row - 1), (column - 1)],
-                                     (weight_mat[row - 1, column - 1 - weight[row - 1]] + value[row - 1])
+                                         (weight_mat[row - 1, column - 1 - weight[row - 1]] + value[row - 1])
         )
       }
     }
@@ -78,4 +73,3 @@ dynamic_knapsack <- function(x,W) {
 
   return(best_combination)
 }
-

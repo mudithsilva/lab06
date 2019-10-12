@@ -1,6 +1,6 @@
 
 ---
-title: "Knapsack Problem"
+title: "Knapsack"
 author: "Chathuranga Silva, Mohammed Bakheet, and Nikodimos Gezahegn"
 date: "11th October 2019"
 output: rmarkdown::html_vignette
@@ -10,131 +10,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-```{r setup}
+
+
+```r
 library(lab6)
-library(profvis)
-library(parallel)
 ```
-
-# Profiling
-
-Profiling could be manually run on profile_provis.R file
-
-![Profile by using 'profvis'](profileImage.png)
-
-# LAB 06 Answers
-
-**Question: 1.1.2**
-How much time does it takes to run the algorithm for n = 16 objects?
-
-```c
-
-library(profvis)
-
-profvis({
-  set.seed(42)
-  n <- 2000
-  knapsack_objects <-
-    data.frame(
-      w=sample(1:4000, size = n, replace = TRUE),
-      v=runif(n = n, 0, 10000)
-    )
-  # ----- Brute Force Knapsack ------ #
-  item1 <- brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500)
-  # ----- Brute Force Knapsack ------ #
-})
-```
-
-**Answer:**
-By using profvis, for n = 16 , time = 730ms (0.73 seconds)
-
-**Question: 1.1.3**
-How much time does it takes to run the algorithm for n = 500 objects?
-
-```c
-
-library(profvis)
-
-profvis({
-  set.seed(42)
-  n <- 2000
-  knapsack_objects <-
-    data.frame(
-      w=sample(1:4000, size = n, replace = TRUE),
-      v=runif(n = n, 0, 10000)
-    )
-  # ----- Dynamic Programming for Knapsack ----- #
-  item3 <- dynamic_knapsack(x = knapsack_objects[1:500,], W = 3500)
-  # ----- Dynamic Programming for Knapsack ----- #
-})
-```
-**Answer:**
-By using profvis, for n = 500, time = 1340ms (1.34 seconds)
-
-**Question: 1.1.4**
-How much time does it takes to run the algorithm for n = 1000000 objects?
-
-```c
-
-library(profvis)
-
-profvis({
-  set.seed(42)
-  n <- 2000
-  knapsack_objects <-
-    data.frame(
-      w=sample(1:4000, size = n, replace = TRUE),
-      v=runif(n = n, 0, 10000)
-    )
-  # ----- Greedy heuristic for Knapsack ----- #
-  item4 <- greedy_knapsack(x = knapsack_objects[1:1000000,], W = 3500)
-  # ----- Greedy heuristic for Knapsack ----- #
-})
-```
-
-**Answer:**
-By using profvis, for n = 1000000, time = 1090ms (1.09 seconds)
-
-**Question: 1.1.6**
-What performance gain could you get by trying to improving your code?
-
-**Answer:**
-lineprof is not working properly on mac machines. Therefore 'profvis' package has been implemented.
-
-By using 'profvis' we found that 'combn' function takes more time. Therefore we implemented parallel programing for 'combn'.
-
-**Question: 1.1.8**
-What performance gain could you get by parallelizing brute force search?
-
-```c
-
-library(profvis)
-
-profvis({
-  set.seed(42)
-  n <- 2000
-  knapsack_objects <-
-    data.frame(
-      w=sample(1:4000, size = n, replace = TRUE),
-      v=runif(n = n, 0, 10000)
-    )
-  
-  # ----- Brute Force Knapsack -with Parallel ----- #
-  item2 <- brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500, parallel = TRUE)
-  # ----- Brute Force Knapsack -with Parallel ----- #
-})
-```
-
-**Answer:**
-Without Parallel, Time = 730ms
-With Parallel, Time = 110ms
 
 
 # Using the algorithms
@@ -179,7 +60,8 @@ List
 **brute_force_knapsack(x,W)**
   :The brute_force_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time
-```{r brute}
+
+```r
 set.seed(42)
 n <- 2000
 knapsack_objects <-
@@ -190,29 +72,45 @@ knapsack_objects <-
 
 start_time <- Sys.time()
 brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> $value
+#> [1] 15428
+#> 
+#> $elements
+#> [1] 3 8
 end_time <- Sys.time()
 print(end_time - start_time)
+#> Time difference of 0.03319573 secs
 ```
 
 **dynamic_knapsack(x,W)**
     :The dynamic_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time.
-```{r dynamic}
+
+```r
 start_time <- Sys.time()
 dynamic_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> Error in dynamic_knapsack(x = knapsack_objects[1:8, ], W = 2000): could not find function "dynamic_knapsack"
 end_time <- Sys.time()
 print(end_time - start_time)
+#> Time difference of 0.00297904 secs
 ```
 
 **greedy_knapsack(x,W)**
   :The greedy_knapsack function returns a list containing the maximum value and the elements to be included in the sack
    The brute force function also shows the time slack of the function execution time.
-```{r greedy}
+
+```r
 start_time <- Sys.time()
 greedy_knapsack(x = knapsack_objects[1:8,], W = 2000)
+#> $value
+#> [1] 15428
+#> 
+#> $elements
+#> [1] 8 3
 end_time <- Sys.time()
 print(end_time - start_time)
-``` 
+#> Time difference of 0.01245141 secs
+```
 
 # References
 
