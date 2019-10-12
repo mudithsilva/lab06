@@ -1,61 +1,75 @@
-#' @export greedy_knapsack
-greedy_knapsack = function(x, W){
-  if (W < 1){
-    stop("The weight value is not valid")
-  }
-  for (y in colnames(x)){
-    if (!(y %in% c("v","w")))
-      stop("Variable name in the dataframe are not named correctly")
-  }
-  #ordering the data in the dataframe x
-  kgvalue <- c(0)
-  itemStatus <- c(0)
-  totalValue <- c(0)
-  valuePerKg <- cbind(x,kgvalue)
-  valuePerKg <- cbind(x,itemStatus)
-  valuePerKg <- cbind(x,totalValue)
-  for (i in 1:nrow(valuePerKg)){
-    valuePerKg[i,"kgvalue"] <- valuePerKg[i,"v"]/valuePerKg[i,"w"]
-  }
-  valuePerKg <- valuePerKg[order(valuePerKg$kgvalue,decreasing = TRUE),]
-  knapsakWeight <- 0
+#' @title Dynamic Knapsack Algorithm
+#' @description Dynamic Knapsack Approch to Solve Knapsack Problem
+#'
+#' @param x data.frame with colnames 'v' & 'w'
+#' @param W Knapsack Maximum Weight
+#'
+#' @return Return best Knapsack combination with maximum value
+#' @export
+#'
+#' @examples
+#' set.seed(42)
+#'n <- 2000
+#'knapsack_objects <- data.frame(
+#'  w=sample(1:4000, size = n, replace = TRUE),
+#'  v=runif(n = n, 0, 10000)
+#')
+#'dynamic_knapsack(x = knapsack_objects[1:8,], W = 3500)
+#'
 
-  for (i in 1:nrow(valuePerKg)){
-    if (knapsakWeight <= W){
-      if (valuePerKg[i,"w"]+knapsakWeight > W){
-        # valuePerKg[i,"itemStatus"] <- (W-knapsakWeight)/valuePerKg[i,"w"]
-        break()
-      }
-      else{
-        knapsakWeight <- knapsakWeight + valuePerKg[i,"w"]
-        valuePerKg[i,"itemStatus"] = 1
+dynamic_knapsack <- function(x,W) {
+
+  if (!is.data.frame(x)) {
+    stop("The input is not a dataframe")
+  }
+
+  if (W < 1) {
+    stop("Please Enter valid Weight")
+  }
+
+  if (!(all(colnames(x) %in% c("v","w")))) {
+    stop("Variable name in the dataframe are not named correctly")
+  }
+
+  best_combination <- list()
+  best_combination[["value"]] = 0
+  best_combination[["elements"]] = 0
+
+  weight_mat <- matrix(NA, ncol = (W + 1), nrow = (nrow(x) + 1))
+  weight_mat[1,] <- 0
+  weight_mat[,1] <- 0
+
+  weight <- x$w
+  value <- x$v
+  items <- nrow(weight_mat)
+
+  for (row in 2:items) {
+    for (column in 2:(W + 2)) {
+      if (weight[row - 1] > column - 2) {
+        weight_mat[row,column - 1] = weight_mat[row - 1, column - 1]
+      } else {
+        weight_mat[row,column - 1] = max(weight_mat[(row - 1), (column - 1)],
+                                         (weight_mat[row - 1, column - 1 - weight[row - 1]] + value[row - 1])
+        )
       }
     }
-
   }
-  valuePerKg[,"kgvalue"] <- valuePerKg[,"v"]*valuePerKg[,"itemStatus"]
-  valuePerKg[,"totalValue"] <- valuePerKg[,"itemStatus"]*valuePerKg[,"kgvalue"]
-  valuePerKg[is.na(valuePerKg)] <- 0
-  total <- round(sum(valuePerKg[,"totalValue"]))
-  itemsList <- as.numeric(which(valuePerKg[,"itemStatus"]==1L))
 
-  itemsMaximum <- max(which(valuePerKg$itemStatus==1))
-  itemsList <- as.numeric(rownames(valuePerKg[1:itemsMaximum,]))
-  resutl <- list("value"=total, "elements"=itemsList)
-  return(resutl)
+  mat_rows <- nrow(weight_mat)
+  mat_cols <- ncol(weight_mat)
+  selectedItems <- c()
 
+
+  while (mat_rows > 1 & mat_cols > 1) {
+    if (weight_mat[mat_rows, mat_cols] != weight_mat[mat_rows - 1, mat_cols]) {
+      selectedItems <- c(selectedItems, mat_rows - 1)
+      mat_cols <- mat_cols - weight[mat_rows - 1]
+    }
+    mat_rows <- mat_rows - 1
+  }
+
+  best_combination[["value"]] = round(weight_mat[nrow(weight_mat), ncol(weight_mat)], digits = 0)
+  best_combination[["elements"]] = sort(selectedItems)
+
+  return(best_combination)
 }
-
-options(max.print = 100000)
-set.seed(42)
-n <- 2000
-knapsack_objects <-
-  data.frame(
-    w=sample(1:4000, size = n, replace = TRUE),
-    v=runif(n = n, 0, 10000)
-  )
-
-start_time <- Sys.time()
-greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-end_time <- Sys.time()
-print(end_time - start_time)

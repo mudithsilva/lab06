@@ -18,5 +18,5 @@ Suggests:
     rmarkdown,
     testthat,
     parallel,
-    data.table
+    profvis
 VignetteBuilder: knitr
